@@ -1,0 +1,123 @@
+{# templates/mainController/index.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Connexion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-size: cover;
+        }
+
+        #app {
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div v-if="!loggedIn">
+            <h1>Connexion</h1>
+            <form @submit.prevent="login">
+                <label for="username">Nom d'utilisateur:</label>
+                <input type="text" id="username" v-model="username" required>
+
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" v-model="password" required>
+
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+        <div v-else>
+            <h1>Bonjour, {{ username }}!</h1>
+            <button @click="logout">Se déconnecter</button>
+        </div>
+    </div>
+
+    <!-- Inclure Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    username: "",
+                    password: "",
+                    loggedIn: false,
+                };
+            },
+            created() {
+                
+                const savedUsername = localStorage.getItem("username");
+                if (savedUsername) {
+                    this.username = savedUsername;
+                    this.loggedIn = true;
+                }
+            },
+            methods: {
+                login() {
+                    if (this.username && this.password) {
+                        // Sauvegarder les informations de connexion dans LocalStorage
+                        localStorage.setItem("username", this.username);
+                        this.loggedIn = true;
+                    }
+                },
+                logout() {
+                    // Supprimer les informations de connexion de LocalStorage
+                    localStorage.removeItem("username");
+                    this.username = "";
+                    this.password = "";
+                    this.loggedIn = false;
+                },
+            },
+        });
+    </script>
+</body>
+</html>
